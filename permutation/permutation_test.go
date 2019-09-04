@@ -8,7 +8,7 @@ import (
 
 type permutationsTestCase struct {
 	given string
-	want []string
+	want  []string
 }
 
 func (p permutationsTestCase) String() string {
@@ -16,25 +16,27 @@ func (p permutationsTestCase) String() string {
 }
 
 func TestCalculatePermutation(t *testing.T) {
-	cases := []permutationsTestCase {
+	cases := []permutationsTestCase{
 		{given: "a", want: []string{"a"}},
 		{given: "b", want: []string{"b"}},
 		{given: "ab", want: []string{"ab", "ba"}},
 		{given: "abc", want: []string{"abc", "bac", "bca", "acb", "cab", "cba"}},
 	}
 
-	t.Run("given a word get all its permutations", func(t *testing.T) {
-		for _, c := range cases {
-			got := permutation.Calculate(c.given)
-			t.Run(c.String(), func(t *testing.T) {
-				for _, wantPer := range c.want {
-					if notIn(wantPer, got) {
-						t.Errorf("%s permutation is missing", wantPer)
-					}
-				}
-			})
+	for _, testCase := range cases {
+		got := permutation.Calculate(testCase.given)
+		assertCalculatedArrayContainsAllItens(t, testCase.want, got)
+	}
+}
+
+func assertCalculatedArrayContainsAllItens(t *testing.T, want, got []string) {
+	t.Helper()
+	for _, wantPer := range want {
+		if notIn(wantPer, got) {
+			t.Errorf("%s permutation is missing", wantPer)
 		}
-	})
+	}
+
 }
 
 func notIn(word string, words []string) bool {
